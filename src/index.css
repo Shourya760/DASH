@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+
+/* Class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Brand-aligned tokens */
+@theme {
+  --font-display: system-ui, 'Segoe UI', 'Noto Sans Devanagari', sans-serif;
+  --color-primary: #1d4ed8;
+  --color-primary-dark: #1e40af;
+  --color-accent-saffron: #ea580c;
+  --color-accent-green: #15803d;
+  --shadow-soft: 0 10px 40px -12px rgb(0 0 0 / 0.15);
+  --shadow-soft-dark: 0 10px 40px -12px rgb(0 0 0 / 0.45);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-display);
+  @apply bg-slate-50 text-slate-900 antialiased text-lg transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100;
+}
+
+@media (min-width: 768px) {
+  body {
+    @apply text-xl;
+  }
+}
+
+#root {
+  min-height: 100vh;
+}
