@@ -39,12 +39,16 @@ export function Dashboard() {
         </p>
       </motion.div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid auto-rows-fr gap-4 sm:grid-cols-2">
         {items.map((item, index) => (
-          <DashboardCard key={item.to} {...item} index={index} />
+          <DashboardCard
+            key={item.to}
+            {...item}
+            index={index}
+            wide={items.length % 2 === 1 && index === items.length - 1}
+          />
         ))}
       </div>
     </div>
   )
 }
-

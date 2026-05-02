@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
-export function DashboardCard({ to, Icon, title, accent = 'blue', index = 0 }) {
+export function DashboardCard({ to, Icon, title, accent = 'blue', index = 0, wide = false }) {
   const cardTone =
     accent === 'saffron'
       ? 'bg-white dark:bg-slate-900'
@@ -37,11 +37,11 @@ export function DashboardCard({ to, Icon, title, accent = 'blue', index = 0 }) {
       transition={{ delay: index * 0.05 }}
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.99 }}
-      className="h-full"
+      className={`h-full ${wide ? 'sm:col-span-2' : ''}`}
     >
       <Link
         to={to}
-        className={`group relative flex min-h-[128px] overflow-hidden rounded-2xl border-2 p-5 shadow-sm transition duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300/70 focus-visible:ring-offset-2 dark:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.85)] dark:focus-visible:ring-cyan-400/60 dark:focus-visible:ring-offset-slate-950 ${cardTone} ${ring} md:min-h-[146px] md:p-6`}
+        className={`group relative grid h-full min-h-[128px] grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-4 overflow-hidden rounded-2xl border-2 p-5 shadow-sm transition duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300/70 focus-visible:ring-offset-2 dark:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.85)] dark:focus-visible:ring-cyan-400/60 dark:focus-visible:ring-offset-slate-950 ${cardTone} ${ring} md:min-h-[146px] md:grid-cols-[4rem_minmax(0,1fr)] md:gap-5 md:p-6`}
       >
         <span className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${bar}`} aria-hidden />
         <span
@@ -50,7 +50,7 @@ export function DashboardCard({ to, Icon, title, accent = 'blue', index = 0 }) {
         >
           <Icon className="h-8 w-8 md:h-9 md:w-9" />
         </span>
-        <span className="flex min-w-0 flex-1 items-center text-xl font-extrabold leading-snug text-slate-950 dark:text-white md:text-2xl">
+        <span className="flex min-w-0 items-center text-xl font-extrabold leading-snug text-slate-950 dark:text-white md:text-2xl">
           <span className="break-words">{title}</span>
         </span>
       </Link>
