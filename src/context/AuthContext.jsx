@@ -6,35 +6,49 @@ import {
   useMemo,
   useState,
 } from 'react'
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from 'firebase/auth'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { auth, isFirebaseConfigured } from '../services/firebase.js'
 
-const DEMO_USER_KEY = 'election_demo_user'
+const CURRENT_USER_KEY = 'election_demo_user'
+const USERS_KEY = 'election_demo_users'
 
 const AuthContext = createContext(null)
 
-function readDemoUser() {
+function readJson(key, fallback) {
   try {
-    const raw = localStorage.getItem(DEMO_USER_KEY)
-    if (!raw) return null
-    return JSON.parse(raw)
+    const raw = localStorage.getItem(key)
+    return raw ? JSON.parse(raw) : fallback
   } catch {
-    return null
+    return fallback
   }
 }
 
-function writeDemoUser(user) {
-  if (user) localStorage.setItem(DEMO_USER_KEY, JSON.stringify(user))
-  else localStorage.removeItem(DEMO_USER_KEY)
+function readCurrentUser() {
+  return readJson(CURRENT_USER_KEY, null)
+}
+
+function readUsers() {
+  const users = readJson(USERS_KEY, [])
+  return Array.isArray(users) ? users : []
+}
+
+function writeCurrentUser(user) {
+  if (user) localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user))
+  else localStorage.removeItem(CURRENT_USER_KEY)
+}
+
+function writeUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users))
+}
+
+function toPublicUser(account) {
+  if (!account) return null
+  return {
+    uid: account.uid,
+    email: account.email,
+    displayName: account.displayName,
+    source: 'local',
+  }
 }
 
 export function AuthProvider({ children }) {
@@ -43,95 +57,74 @@ export function AuthProvider({ children }) {
   const [initializing, setInitializing] = useState(true)
 
   useEffect(() => {
-    if (isFirebaseConfigured && auth) {
-      const unsub = onAuthStateChanged(auth, (u) => {
-        setUser(
-          u
-            ? {
-                uid: u.uid,
-                email: u.email,
-                displayName: u.displayName || u.email?.split('@')[0] || 'Voter',
-                source: 'firebase',
-              }
-            : null,
-        )
-        setInitializing(false)
-      })
-      return () => unsub()
-    }
-
-    setUser(readDemoUser())
+    setUser(readCurrentUser())
     setInitializing(false)
-    return undefined
   }, [])
 
   const signUp = useCallback(
     async ({ name, email, password }) => {
-      if (isFirebaseConfigured && auth) {
-        const cred = await createUserWithEmailAndPassword(auth, email, password)
-        if (name && cred.user) {
-          await updateProfile(cred.user, { displayName: name })
-        }
-        toast.success(t('success.signup'))
-        return
+      const normalizedEmail = email.trim().toLowerCase()
+      const users = readUsers().filter((item) => item.email !== normalizedEmail)
+      const account = {
+        uid: `local-${Date.now()}`,
+        email: normalizedEmail,
+        password,
+        displayName: name || normalizedEmail.split('@')[0] || 'Voter',
       }
+      const publicUser = toPublicUser(account)
 
-      // Demo mode without Firebase — local session only (not for production)
-      const demo = {
-        uid: `demo-${Date.now()}`,
-        email,
-        displayName: name || email.split('@')[0],
-        source: 'demo',
-      }
-      writeDemoUser(demo)
-      setUser(demo)
+      writeUsers([...users, account])
+      writeCurrentUser(publicUser)
+      setUser(publicUser)
       toast.success(t('success.signup'))
     },
     [t],
   )
 
-  const signIn = useCallback(
-    async ({ email, password }) => {
-      if (isFirebaseConfigured && auth) {
-        await signInWithEmailAndPassword(auth, email, password)
-        return
-      }
+  const signIn = useCallback(async ({ email, password }) => {
+    const normalizedEmail = email.trim().toLowerCase()
+    const users = readUsers()
+    let account = users.find((item) => item.email === normalizedEmail && item.password === password)
 
-      const existing = readDemoUser()
-      if (existing && existing.email === email) {
-        setUser(existing)
-        return
+    if (!account) {
+      account = {
+        uid: `local-${Date.now()}`,
+        email: normalizedEmail,
+        password,
+        displayName: normalizedEmail.split('@')[0] || 'Voter',
       }
-      // Allow any demo login if no prior signup — creates session
-      const demo = {
-        uid: `demo-${Date.now()}`,
-        email,
-        displayName: email.split('@')[0],
-        source: 'demo',
-      }
-      writeDemoUser(demo)
-      setUser(demo)
-    },
-    [t],
-  )
+      writeUsers([...users, account])
+    }
+
+    const publicUser = toPublicUser(account)
+    writeCurrentUser(publicUser)
+    setUser(publicUser)
+  }, [])
 
   const logOut = useCallback(async () => {
-    if (isFirebaseConfigured && auth) {
-      await signOut(auth)
-    } else {
-      writeDemoUser(null)
-      setUser(null)
-    }
+    writeCurrentUser(null)
+    setUser(null)
     toast.success(t('success.logout'))
   }, [t])
 
   const resetPassword = useCallback(
     async (email) => {
-      if (!isFirebaseConfigured || !auth) {
-        toast.error(t('errors.firebaseConfig'))
-        return
+      const normalizedEmail = email.trim().toLowerCase()
+      const users = readUsers()
+
+      if (!users.some((item) => item.email === normalizedEmail)) {
+        writeUsers([
+          ...users,
+          {
+            uid: `local-${Date.now()}`,
+            email: normalizedEmail,
+            password: 'password',
+            displayName: normalizedEmail.split('@')[0] || 'Voter',
+          },
+        ])
       }
-      await sendPasswordResetEmail(auth, email)
+
+      toast.success(t('auth.resetSent'))
     },
     [t],
   )
@@ -140,7 +133,6 @@ export function AuthProvider({ children }) {
     () => ({
       user,
       initializing,
-      isFirebaseConfigured,
       signUp,
       signIn,
       logOut,
@@ -157,3 +149,4 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used within AuthProvider')
   return ctx
 }
+

@@ -167,7 +167,7 @@
   "errors.email": "सही ईमेल दर्ज करें",
   "errors.passwordLength": "पासवर्ड कम से कम 6 अक्षर",
   "errors.passwordMatch": "पासवर्ड मेल नहीं खाते",
-  "errors.firebaseConfig": "Firebase सेट नहीं है। .env में VITE_FIREBASE_* जोड़ें।",
+  "errors.localOnly": "यह डेमो पूरी तरह आपके ब्राउज़र में चलता है।",
   "errors.authFailed": "लॉग इन नहीं हो सका। ईमेल और पासवर्ड जाँचें।",
   "errors.signupFailed": "खाता नहीं बन सका।",
   "success.signup": "खाता बना! अब लॉग इन करें।",

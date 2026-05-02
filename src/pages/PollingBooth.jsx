@@ -4,15 +4,20 @@ import { useTranslation } from 'react-i18next'
 import { SimplePageLayout } from '../layouts/SimplePageLayout.jsx'
 import { InputField } from '../components/ui/InputField.jsx'
 import { Button } from '../components/ui/Button.jsx'
+import { findPollingBooth } from '../services/proxyData.js'
 
 export function PollingBooth() {
   const { t } = useTranslation()
   const [epic, setEpic] = useState('')
-  const [showResult, setShowResult] = useState(false)
+  const [result, setResult] = useState(null)
+  const [searching, setSearching] = useState(false)
 
-  function handleSearch(e) {
+  async function handleSearch(e) {
     e.preventDefault()
-    setShowResult(true)
+    setSearching(true)
+    const booth = await findPollingBooth(epic)
+    setResult(booth)
+    setSearching(false)
   }
 
   return (
@@ -28,18 +33,24 @@ export function PollingBooth() {
           onChange={(e) => setEpic(e.target.value)}
           placeholder="ABC1234567"
         />
-        <Button type="submit" variant="green">
-          {t('booth.search')}
+        <Button type="submit" variant="green" disabled={searching}>
+          {searching ? t('common.loading') : t('booth.search')}
         </Button>
       </form>
 
-      {showResult ? (
+      {result ? (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl border-2 border-orange-200 bg-orange-50 p-6 text-lg text-slate-800 md:text-xl"
         >
-          {t('booth.result')}
+          <p className="font-bold">{result.boothName}</p>
+          <p className="mt-2">{result.address}</p>
+          <p className="mt-2">
+            {result.ward} - {result.room}
+          </p>
+          <p className="mt-2">{result.pollingDate}</p>
+          <p className="mt-2">{result.officerHelpdesk}</p>
         </motion.div>
       ) : null}
     </SimplePageLayout>

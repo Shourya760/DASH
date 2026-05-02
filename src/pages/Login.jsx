@@ -12,7 +12,7 @@ const REMEMBER_KEY = 'election_remember_email'
 
 export function Login() {
   const { t } = useTranslation()
-  const { signIn, resetPassword, user, isFirebaseConfigured } = useAuth()
+  const { signIn, resetPassword, user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || '/dashboard'
