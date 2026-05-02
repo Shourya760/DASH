@@ -13,7 +13,7 @@ export function FeatureCard({ to, icon, title, description, delay = 0 }) {
     >
       <Link
         to={to}
-        className="flex h-full min-h-[160px] flex-col gap-3 rounded-3xl border-2 border-blue-100 bg-white p-6 shadow-[var(--shadow-soft)] transition hover:border-[#0056b3]/50 hover:shadow-xl dark:border-slate-700 dark:bg-slate-900 dark:shadow-[var(--shadow-soft-dark)] dark:hover:border-cyan-500/40"
+        className="flex h-full min-h-[160px] flex-col gap-3 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm transition hover:border-[#0056b3]/50 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-cyan-500/40"
       >
         <div className="text-4xl" aria-hidden>
           {icon}

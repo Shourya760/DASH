@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { MainLayout } from '../layouts/MainLayout.jsx'
 import { PrivateRoute } from './PrivateRoute.jsx'
 import { Home } from '../pages/Home.jsx'
@@ -16,6 +16,7 @@ import { PracticeVoting } from '../pages/PracticeVoting.jsx'
 import { Quiz } from '../pages/Quiz.jsx'
 import { Privacy } from '../pages/Privacy.jsx'
 import { Terms } from '../pages/Terms.jsx'
+import { ErrorPage } from '../pages/ErrorPage.jsx'
 
 export function AppRoutes() {
   return (
@@ -94,7 +95,7 @@ export function AppRoutes() {
           }
         />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<ErrorPage />} />
       </Route>
     </Routes>
   )

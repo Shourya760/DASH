@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { HiCheckCircle } from 'react-icons/hi'
 import { SimplePageLayout } from '../layouts/SimplePageLayout.jsx'
 
 const docList = [
   { en: 'Voter ID card', hi: 'मतदाता पहचान पत्र' },
-  { en: 'Aadhaar (where permitted)', hi: 'आधार (जहाँ अनुमति हो)' },
+  { en: 'Aadhaar (where permitted)', hi: 'आधार (जहां अनुमति हो)' },
   { en: 'Passport', hi: 'पासपोर्ट' },
   { en: 'Driving licence', hi: 'ड्राइविंग लाइसेंस' },
-  { en: 'Tax ID card (where accepted)', hi: 'टैक्स आईडी कार्ड (जहाँ मान्य हो)' },
-  { en: 'Service ID cards (for officials as per rules)', hi: 'सेवा पहचान पत्र (नियमों अनुसार)' },
+  { en: 'Tax ID card (where accepted)', hi: 'टैक्स आईडी कार्ड (जहां मान्य हो)' },
+  { en: 'Service ID cards (for officials as per rules)', hi: 'सेवा पहचान पत्र (नियमों के अनुसार)' },
 ]
 
 export function Documents() {
@@ -17,8 +18,12 @@ export function Documents() {
 
   return (
     <SimplePageLayout>
-      <h1 className="mb-4 text-3xl font-extrabold text-blue-950 md:text-4xl">{t('documents.title')}</h1>
-      <p className="mb-8 text-xl text-slate-700 md:text-2xl">{t('documents.sub')}</p>
+      <h1 className="mb-4 text-3xl font-extrabold text-slate-950 dark:text-white md:text-4xl">
+        {t('documents.title')}
+      </h1>
+      <p className="mb-8 text-xl font-medium text-slate-600 dark:text-slate-300 md:text-2xl">
+        {t('documents.sub')}
+      </p>
 
       <ul className="space-y-4">
         {docList.map((item, i) => (
@@ -28,15 +33,19 @@ export function Documents() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.04 }}
-            className="flex items-start gap-4 rounded-2xl border-2 border-green-100 bg-white p-5 shadow-md"
+            className="flex items-start gap-4 rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm dark:border-emerald-400/25 dark:bg-slate-900"
           >
-            <span className="text-2xl" aria-hidden>
-              ✓
+            <HiCheckCircle
+              className="mt-0.5 h-7 w-7 shrink-0 text-emerald-700 dark:text-emerald-300"
+              aria-hidden
+            />
+            <span className="text-xl font-semibold text-slate-900 dark:text-slate-100 md:text-2xl">
+              {item[lang]}
             </span>
-            <span className="text-xl font-semibold text-slate-900 md:text-2xl">{item[lang]}</span>
           </motion.li>
         ))}
       </ul>
     </SimplePageLayout>
   )
 }
+

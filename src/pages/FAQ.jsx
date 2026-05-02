@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
-import { SimplePageLayout } from '../layouts/SimplePageLayout.jsx'
 import { Button } from '../components/ui/Button.jsx'
 import { InputField } from '../components/ui/InputField.jsx'
-import { findFaqReply } from '../utils/faqReplies.js'
+import { SimplePageLayout } from '../layouts/SimplePageLayout.jsx'
 import { speakText } from '../hooks/useSpeech.js'
+import { findFaqReply } from '../utils/faqReplies.js'
 
 const quickQuestions = [
   { key: 'q1', en: 'How to register?', hi: 'पंजीकरण कैसे करें?' },
@@ -31,10 +31,7 @@ export function FAQ() {
   const [messages, setMessages] = useState(() => [
     {
       role: 'bot',
-      text:
-        lang === 'hi'
-          ? 'नमस्ते! नीचे एक प्रश्न चुनें या लिखें।'
-          : 'Hi! Pick a question below or type your own.',
+      text: lang === 'hi' ? 'नमस्ते! नीचे एक प्रश्न चुनें या लिखें।' : 'Hi! Pick a question below or type your own.',
     },
   ])
   const [input, setInput] = useState('')
@@ -96,8 +93,12 @@ export function FAQ() {
 
   return (
     <SimplePageLayout>
-      <h1 className="mb-4 text-3xl font-extrabold text-blue-950 md:text-4xl">{t('faq.title')}</h1>
-      <p className="mb-6 text-xl text-slate-700 md:text-2xl">{t('faq.sub')}</p>
+      <h1 className="mb-4 text-3xl font-extrabold text-slate-950 dark:text-white md:text-4xl">
+        {t('faq.title')}
+      </h1>
+      <p className="mb-6 text-xl font-medium text-slate-600 dark:text-slate-300 md:text-2xl">
+        {t('faq.sub')}
+      </p>
 
       <div className="mb-4 flex flex-wrap gap-2">
         {quickQuestions.map((q) => (
@@ -105,7 +106,7 @@ export function FAQ() {
             key={q.key}
             type="button"
             onClick={() => handleQuick(q.key)}
-            className="rounded-2xl border-2 border-blue-200 bg-blue-50 px-4 py-3 text-left text-base font-semibold text-blue-900 hover:bg-blue-100 md:text-lg"
+            className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-left text-base font-semibold text-blue-900 transition hover:bg-blue-100 dark:border-cyan-400/25 dark:bg-cyan-500/10 dark:text-cyan-100 dark:hover:bg-cyan-500/15 md:text-lg"
           >
             {q[lang]}
           </button>
@@ -120,12 +121,12 @@ export function FAQ() {
             onClick={toggleListen}
             className="!min-h-[48px]"
           >
-            {listening ? '…' : ''} {t('faq.voiceListen')}
+            {listening ? '...' : ''} {t('faq.voiceListen')}
           </Button>
         ) : (
-          <p className="rounded-xl bg-slate-100 px-4 py-3 text-base text-slate-600">
+          <p className="rounded-xl bg-slate-100 px-4 py-3 text-base text-slate-600 dark:bg-slate-900 dark:text-slate-300">
             {lang === 'hi'
-              ? 'आपका ब्राउज़र आवाज़ पहचान को सपोर्ट नहीं कर सकता।'
+              ? 'आपका ब्राउज़र आवाज पहचान को सपोर्ट नहीं कर सकता।'
               : 'Your browser may not support speech recognition.'}
           </p>
         )}
@@ -135,7 +136,7 @@ export function FAQ() {
       </div>
 
       <div
-        className="mb-6 max-h-[420px] space-y-3 overflow-y-auto rounded-3xl border-2 border-slate-200 bg-slate-50 p-4 md:max-h-[520px] md:p-6"
+        className="mb-6 max-h-[420px] space-y-3 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900 md:max-h-[520px] md:p-6"
         role="log"
         aria-live="polite"
       >
@@ -148,10 +149,10 @@ export function FAQ() {
               className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 text-lg shadow md:max-w-[75%] md:text-xl ${
+                className={`max-w-[85%] rounded-2xl px-4 py-3 text-lg shadow-sm md:max-w-[75%] md:text-xl ${
                   m.role === 'user'
-                    ? 'bg-blue-700 text-white'
-                    : 'border-2 border-slate-200 bg-white text-slate-900'
+                    ? 'bg-blue-700 text-white dark:bg-cyan-700'
+                    : 'border border-slate-200 bg-white text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100'
                 }`}
               >
                 {m.text}
@@ -179,3 +180,4 @@ export function FAQ() {
     </SimplePageLayout>
   )
 }
+

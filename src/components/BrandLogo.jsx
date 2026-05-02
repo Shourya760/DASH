@@ -24,7 +24,14 @@ export function BrandLogo({ onNavigate }) {
           alt={t('app.logoAlt')}
           width={280}
           height={64}
-          className="h-9 w-auto max-w-[min(58vw,260px)] object-contain object-left drop-shadow-sm transition-[filter] duration-300 group-hover:brightness-105 dark:opacity-95 dark:group-hover:opacity-100 md:h-11 md:max-w-[280px]"
+          className="h-9 w-auto max-w-[min(58vw,260px)] object-contain object-left drop-shadow-sm transition-[filter] duration-300 group-hover:brightness-105 dark:hidden md:h-11 md:max-w-[280px]"
+        />
+        <img
+          src="/dash-logo-dark.png"
+          alt={t('app.logoAlt')}
+          width={280}
+          height={64}
+          className="hidden h-9 w-auto max-w-[min(58vw,260px)] object-contain object-left drop-shadow-sm transition-[filter] duration-300 group-hover:brightness-105 dark:block md:h-11 md:max-w-[280px]"
         />
       </motion.div>
       <div className="hidden h-10 w-px shrink-0 bg-slate-200 dark:bg-slate-600 sm:block" aria-hidden />

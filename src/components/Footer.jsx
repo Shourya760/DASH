@@ -27,7 +27,12 @@ export function Footer() {
               <img
                 src="/dash-logo.png"
                 alt=""
-                className="h-10 w-auto max-w-[200px] object-contain object-left"
+                className="h-10 w-auto max-w-[200px] object-contain object-left dark:hidden"
+              />
+              <img
+                src="/dash-logo-dark.png"
+                alt=""
+                className="hidden h-10 w-auto max-w-[200px] object-contain object-left dark:block"
               />
               <span className="sr-only">{t('app.title')}</span>
             </Link>

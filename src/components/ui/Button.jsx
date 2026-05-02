@@ -12,7 +12,7 @@ export function Button({
   ...props
 }) {
   const base =
-    'inline-flex min-h-[52px] items-center justify-center rounded-2xl px-6 py-3 text-lg font-semibold shadow-md transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 disabled:opacity-50 dark:focus-visible:ring-offset-slate-900 md:min-h-[56px] md:text-xl'
+    'inline-flex min-h-[52px] items-center justify-center rounded-xl px-6 py-3 text-lg font-semibold shadow-sm transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 disabled:opacity-50 dark:focus-visible:ring-offset-slate-900 md:min-h-[56px] md:text-xl'
   const variants = {
     primary:
       'bg-blue-700 text-white hover:bg-blue-800 focus-visible:ring-blue-400 border border-blue-800 dark:bg-cyan-600 dark:hover:bg-cyan-500 dark:border-cyan-500 dark:text-white',
